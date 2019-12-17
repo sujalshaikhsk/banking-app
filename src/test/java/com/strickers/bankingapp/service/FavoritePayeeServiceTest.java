@@ -1,7 +1,5 @@
-
 package com.strickers.bankingapp.service;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,8 +12,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.BeanUtils;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.strickers.bankingapp.dto.FavoritePayeeRequestDto;
 import com.strickers.bankingapp.dto.FavoritePayeeResponseDto;
@@ -31,7 +29,7 @@ import com.strickers.bankingapp.repository.CustomerRepository;
 import com.strickers.bankingapp.repository.FavoritePayeeRepository;
 import com.strickers.bankingapp.utils.StringConstant;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 public class FavoritePayeeServiceTest {
 
 	@InjectMocks

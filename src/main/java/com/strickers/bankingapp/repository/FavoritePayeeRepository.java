@@ -12,12 +12,13 @@ import com.strickers.bankingapp.entity.FavoritePayee;
 @Repository
 public interface FavoritePayeeRepository extends JpaRepository<FavoritePayee, Integer> {
 
+	FavoritePayee findByPayeeId(Integer payeeId);
+
 	@Query("select p from FavoritePayee p where p.customer.customerId=:customerId and p.status=:status")
 	List<FavoritePayee> getPayeesByCustomerIdAndStatus(@Param("customerId") Integer customerId,
 			@Param("status") String status);
 
 	@Query("select p from FavoritePayee p where p.customer.customerId=:customerId and p.accountNumber=:accountNumber")
 	FavoritePayee findByCustomerIdAndAccountNumber(@Param("customerId")Integer customerId,@Param("accountNumber") Long accountNumber);
-
 
 }
