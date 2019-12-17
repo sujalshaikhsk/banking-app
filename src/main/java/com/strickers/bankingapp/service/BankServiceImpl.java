@@ -19,10 +19,22 @@ import com.strickers.bankingapp.utils.StringConstant;
  */
 @Service
 public class BankServiceImpl implements BankService {
+	/**
+	 * The Constant log.
+	 */
 	private static final Logger logger = LoggerFactory.getLogger(BankServiceImpl.class);
+	/**
+	 * The bankRepository
+	 */
 	@Autowired
 	BankRepository bankRepository;
 
+	/**
+	 * @description -> this method is used to get bank and branch name with
+	 *              ifscCode.
+	 * @param ifscCode
+	 * @return bankResponseDto
+	 */
 	@Override
 	public BankResponseDto getBankAndBranchName(String ifscCode) {
 		BankResponseDto bankResponseDto = null;

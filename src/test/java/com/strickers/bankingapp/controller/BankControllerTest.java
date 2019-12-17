@@ -18,6 +18,13 @@ import com.strickers.bankingapp.dto.BankResponseDto;
 import com.strickers.bankingapp.entity.Bank;
 import com.strickers.bankingapp.service.BankService;
 
+/**
+ * @author Vasavi
+ * @since 2019-12-17
+ * @description -> this class is used to do test operation for getting bank and
+ *              branch name with ifscCode.
+ *
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 public class BankControllerTest {
 	private static final Logger logger = LoggerFactory.getLogger(BankControllerTest.class);

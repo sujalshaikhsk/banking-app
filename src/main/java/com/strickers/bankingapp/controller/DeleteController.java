@@ -15,14 +15,31 @@ import com.strickers.bankingapp.dto.ResponseDto;
 import com.strickers.bankingapp.service.BankServiceImpl;
 import com.strickers.bankingapp.service.DeleteService;
 
+/**
+ * @author Vasavi
+ * @since  2019-12-17
+ * @description -> this class is used to change the status of the particular payeeId 
+ *
+ */
 @RestController
 @RequestMapping("/{customerId}/payees")
 @CrossOrigin(allowedHeaders = { "*", "*/" }, origins = { "*", "*/" })
 public class DeleteController {
+	/**
+	 * The Constant log.
+	 */
 	private static final Logger logger = LoggerFactory.getLogger(BankServiceImpl.class);
+	/**
+	 * The deleteService.
+	 */
 	@Autowired
 	DeleteService deleteService;
 
+	/**
+	 * @description -> this method is used to change the status of the particular payeeId
+	 * @param payeeId
+	 * @return responseDto
+	 */
 	@DeleteMapping("")
 	public ResponseEntity<ResponseDto> deleteAccount(@RequestParam("payeeId") Integer payeeId) {
 		logger.info("Inside DeleteController :deleteAccount");

@@ -10,12 +10,25 @@ import com.strickers.bankingapp.entity.FavoritePayee;
 import com.strickers.bankingapp.repository.FavoritePayeeRespository;
 import com.strickers.bankingapp.utils.StringConstant;
 
+/**
+ * @author Vasavi
+ * @since 2019-12-17
+ * @description ->this class is used to change the status of the particular
+ *              payeeId when we are doing delete operation.
+ *
+ */
 @Service
 public class DeleteServiceImpl implements DeleteService {
 	private static final Logger logger = LoggerFactory.getLogger(BankServiceImpl.class);
 	@Autowired
 	FavoritePayeeRespository favoritePayeeRespository;
 
+	/**
+	 * @description ->this class is used to change the status of the particular
+	 *              payeeId when we are doing delete operation.
+	 * @param payeeId
+	 * @return responseDto
+	 */
 	@Override
 	public ResponseDto deleteAccount(Integer payeeId) {
 		ResponseDto responseDto = null;

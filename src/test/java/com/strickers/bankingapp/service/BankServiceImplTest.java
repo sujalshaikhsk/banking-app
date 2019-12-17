@@ -17,6 +17,12 @@ import com.strickers.bankingapp.dto.BankResponseDto;
 import com.strickers.bankingapp.entity.Bank;
 import com.strickers.bankingapp.repository.BankRepository;
 
+/**
+ * @author Vasavi
+ * @since 2019-12-17
+ * @description -> this class is used to do test operation for getting bank and
+ *              branch name with ifscCode.
+ */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class BankServiceImplTest {
 	private static final Logger logger = LoggerFactory.getLogger(BankServiceImplTest.class);
