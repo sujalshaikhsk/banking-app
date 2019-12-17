@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.strickers.bankingapp.dto.ResponseDto;
+import com.strickers.bankingapp.entity.Customer;
 import com.strickers.bankingapp.entity.FavoritePayee;
 import com.strickers.bankingapp.service.DeleteService;
 
@@ -34,19 +35,21 @@ public class DeleteControllerTest {
 	DeleteService deleteService;
 	ResponseDto responseDto = new ResponseDto();
 	FavoritePayee favoritePayee = new FavoritePayee();
+	Customer customer = new Customer();
 
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
 		responseDto.setStatusCode(200);
 		favoritePayee.setPayeeId(1);
+		customer.setCustomerId(1);
 	}
 
 	@Test
 	public void testDeleteAccount() {
 		logger.debug("Inside deleteControllerTest");
-		when(deleteService.deleteAccount(1)).thenReturn(responseDto);
-		ResponseEntity<ResponseDto> result = deleteController.deleteAccount(1);
+		when(deleteService.deleteAccount(1, 1)).thenReturn(responseDto);
+		ResponseEntity<ResponseDto> result = deleteController.deleteAccount(1, 1);
 		assertEquals(200, result.getBody().getStatusCode());
 	}
 

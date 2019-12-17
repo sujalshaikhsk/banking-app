@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.strickers.bankingapp.dto.BankResponseDto;
 import com.strickers.bankingapp.entity.Bank;
 import com.strickers.bankingapp.repository.BankRepository;
+import com.strickers.bankingapp.utils.StringConstant;
 
 /**
  * @author Vasavi
@@ -37,7 +38,8 @@ public class BankServiceImplTest {
 	public void init() {
 		MockitoAnnotations.initMocks(this);
 		bank.setIfscCode("SBI01122");
-		bankResponseDto.setStatusCode(200);
+		bankResponseDto.setStatusCode(StringConstant.SUCCESS_STATUS_CODE);
+		bankResponseDto.setStatusCode(StringConstant.FAILURE_STATUS_CODE);
 
 	}
 
@@ -47,6 +49,15 @@ public class BankServiceImplTest {
 		when(bankRepository.findByIfscCode("SBI01122")).thenReturn(bank);
 		BankResponseDto bankResponseDto = bankService.getBankAndBranchName("SBI01122");
 		assertEquals(200, bankResponseDto.getStatusCode());
+
+	}
+
+	@Test
+	public void testGetBankAndBranchNameNegative() {
+		logger.debug("Inside getBankAndBranchNameNegativeTest");
+		when(bankRepository.findByIfscCode("SBI01122")).thenReturn(null);
+		BankResponseDto bankResponseDto = bankService.getBankAndBranchName("SBI01122");
+		assertEquals(204, bankResponseDto.getStatusCode());
 
 	}
 }

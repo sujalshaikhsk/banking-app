@@ -30,10 +30,10 @@ public class DeleteServiceImpl implements DeleteService {
 	 * @return responseDto
 	 */
 	@Override
-	public ResponseDto deleteAccount(Integer payeeId) {
+	public ResponseDto deleteAccount(Integer customerId, Integer payeeId) {
 		ResponseDto responseDto = null;
 		logger.info("Inside deleteAccount method");
-		FavoritePayee favoritePayee = favoritePayeeRespository.findByPayeeId(payeeId);
+		FavoritePayee favoritePayee = favoritePayeeRespository.findByPayeeIdAndCustomerId(customerId, payeeId);
 		if (favoritePayee != null) {
 			responseDto = new ResponseDto();
 			favoritePayee.setStatus(StringConstant.DEACTIVE_STATUS);
