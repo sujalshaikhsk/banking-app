@@ -6,6 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.strickers.bankingapp.dto.PayeeRequestDto;
+import com.strickers.bankingapp.dto.PayeesResponseDto;
 import com.strickers.bankingapp.repository.BankRepository;
 import com.strickers.bankingapp.repository.FavoritePayeeRepository;
 import com.strickers.bankingapp.utils.StringConstant;
@@ -21,6 +23,9 @@ public class FavoritePayeeServiceTest {
 	
 	@Mock
 	BankRepository bankRepository;
+	
+	static PayeeRequestDto payeeRequestDto = new PayeeRequestDto();
+	static PayeesResponseDto payeesResponseDto = new PayeesResponseDto();
 	
 	@Before
 	public void setup() {

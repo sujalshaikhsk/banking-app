@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.strickers.bankingapp.dto.PayeeRequestDto;
 import com.strickers.bankingapp.dto.PayeeResponseDto;
+import com.strickers.bankingapp.dto.PayeesResponseDto;
 import com.strickers.bankingapp.entity.Bank;
 import com.strickers.bankingapp.entity.FavoritePayee;
 import com.strickers.bankingapp.exception.IfscCodeNotFoundException;
@@ -28,9 +29,7 @@ public class FavoritePayeeControllerTest {
 	FavoritePayeeService favoritePayeeService;
 
 	static PayeeRequestDto payeeRequestDto = new PayeeRequestDto();
-	static PayeeResponseDto payeeResponseDto = new PayeeResponseDto();
-	static Bank bank = new Bank();
-	static FavoritePayee favoritePayee = new FavoritePayee();
+	static PayeesResponseDto payeesResponseDto = new PayeesResponseDto();
 
 	@Before
 	public void setup() {
@@ -39,15 +38,15 @@ public class FavoritePayeeControllerTest {
 		payeeRequestDto.setIfscCode("ABC1234");
 		payeeRequestDto.setPayeeId(1);
 
-		payeeResponseDto.setFavoriteName("Sri");
-		payeeResponseDto.setMessage(StringConstant.UPDATED_SUCCESS);
-		payeeResponseDto.setStatusCode(200);
+		payeesResponseDto.setFavoriteName("Sri");
+		payeesResponseDto.setMessage(StringConstant.UPDATED_SUCCESS);
+		payeesResponseDto.setStatusCode(200);
 	}
 
 	@Test
 	public void updateFavoritePayeePositive() throws IfscCodeNotFoundException {
 		Integer customerId = 1;
-		Mockito.when(favoritePayeeService.updateFavoritePayee(payeeRequestDto)).thenReturn(payeeResponseDto);
+		Mockito.when(favoritePayeeService.updateFavoritePayee(payeeRequestDto)).thenReturn(payeesResponseDto);
 		Integer result = favoritePayeeController.updateFavoritePayee(customerId, payeeRequestDto).getStatusCodeValue();
 		assertEquals(200, result);
 	}

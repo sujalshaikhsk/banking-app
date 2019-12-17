@@ -9,12 +9,6 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Bank is the entity class
- * 
- * @author Sujal
- * @description This class will show the details of the bank
- */
 @Entity
 @Table(name = "banks")
 @Setter

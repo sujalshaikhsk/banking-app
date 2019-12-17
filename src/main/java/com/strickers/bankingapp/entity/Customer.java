@@ -1,5 +1,6 @@
 package com.strickers.bankingapp.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
@@ -11,19 +12,14 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Customer is the entity class
- * 
- * @author Sujal
- * @description This class will show the details of customer
- */
-
 @Entity
 @Table(name = "customers")
 @Getter
 @Setter
-public class Customer {
+public class Customer implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer customerId;

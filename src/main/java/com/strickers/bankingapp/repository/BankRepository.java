@@ -8,7 +8,6 @@ import com.strickers.bankingapp.entity.Bank;
 @Repository
 public interface BankRepository extends JpaRepository<Bank, Integer> {
 
-	Bank findByIfscCode(String ifscCode);
-
+	public Bank findByIfscCode(String ifscCode);
 
 }
