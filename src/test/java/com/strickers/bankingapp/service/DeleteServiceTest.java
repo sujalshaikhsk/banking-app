@@ -1,7 +1,7 @@
 package com.strickers.bankingapp.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -52,7 +52,7 @@ public class DeleteServiceTest {
 		logger.debug("Inside deleteAccountTest");
 		when(favoritePayeeRespository.findByPayeeIdAndCustomerId(1, 1)).thenReturn(favoritePayee);
 		ResponseDto responseDto = deleteService.deleteAccount(1, 1);
-		assertThat(responseDto);
+		assertNotNull(responseDto);
 	}
 
 }
