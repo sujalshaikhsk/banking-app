@@ -38,7 +38,7 @@ public class FavoritePayeeController {
 	 * @throws IfscCodeNotFoundException
 	 */
 	@PutMapping
-	ResponseEntity<PayeesResponseDto> updateFavoritePayee(@PathVariable("customerId") Integer customerId,
+	public ResponseEntity<PayeesResponseDto> updateFavoritePayee(@PathVariable("customerId") Integer customerId,
 			@RequestBody PayeeRequestDto payeeRequestDto) throws IfscCodeNotFoundException {
 		PayeesResponseDto responseDto = favoritePayeeService.updateFavoritePayee(payeeRequestDto);
 		if (responseDto != null) {
