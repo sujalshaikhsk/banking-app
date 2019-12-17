@@ -14,14 +14,6 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-
-/**
- * FavoritePayee is the entity class
- * 
- * @author Sujal
- * @description This class will maintain the favorite payee details
- */
-
 @Entity
 @Table(name = "favorite_payees")
 @Getter
@@ -33,19 +25,18 @@ public class FavoritePayee implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer payeeId;
-
 	private Long accountNumber;
 	private String favoriteName;
-	
-	@OneToOne
-	@JoinColumn(name ="customer_id")
-	private Customer customer;
-	
-	@OneToOne
-	@JoinColumn(name ="ifsc_code")
-	private Bank bank;
-	
 	private String status;
 	private LocalDate createdDate;
 	private LocalDate updatedDate;
+	
+	@OneToOne
+	@JoinColumn(name = "ifsc_code")
+	private Bank bank;
+
+	@OneToOne
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
+
 }

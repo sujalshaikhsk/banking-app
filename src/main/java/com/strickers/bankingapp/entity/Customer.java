@@ -12,13 +12,6 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Customer is the entity class
- * 
- * @author Sujal
- * @description This class will show the details of customer
- */
-
 @Entity
 @Table(name = "customers")
 @Getter
