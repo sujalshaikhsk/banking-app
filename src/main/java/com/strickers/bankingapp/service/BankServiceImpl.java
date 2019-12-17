@@ -10,6 +10,13 @@ import com.strickers.bankingapp.entity.Bank;
 import com.strickers.bankingapp.repository.BankRepository;
 import com.strickers.bankingapp.utils.StringConstant;
 
+/**
+ * @author Vasavi
+ * @since 2019-12-17
+ * @description -> this class is used to get bank name and branch name with
+ *              ifscCode
+ *
+ */
 @Service
 public class BankServiceImpl implements BankService {
 	private static final Logger logger = LoggerFactory.getLogger(BankServiceImpl.class);
@@ -21,7 +28,7 @@ public class BankServiceImpl implements BankService {
 		BankResponseDto bankResponseDto = null;
 		logger.info("Inside getBankAndBranchName method ");
 		Bank bank = bankRepository.findByIfscCode(ifscCode);
-		if (ifscCode != null) {
+		if (bank != null) {
 			bankResponseDto = new BankResponseDto();
 			bankResponseDto.setBankName(bank.getBankName());
 			bankResponseDto.setBranchName(bank.getBranchName());

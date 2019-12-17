@@ -1,4 +1,4 @@
-package com.strickers.bankingapp.controller;
+package com.strickers.bankingapp.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -9,22 +9,21 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.strickers.bankingapp.dto.BankResponseDto;
 import com.strickers.bankingapp.entity.Bank;
-import com.strickers.bankingapp.service.BankService;
+import com.strickers.bankingapp.repository.BankRepository;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-public class BankControllerTest {
-	private static final Logger logger = LoggerFactory.getLogger(BankControllerTest.class);
+@RunWith(MockitoJUnitRunner.Silent.class)
+public class BankServiceImplTest {
+	private static final Logger logger = LoggerFactory.getLogger(BankServiceImplTest.class);
 	@InjectMocks
-	BankController bankController;
+	BankServiceImpl bankService;
 	@Mock
-	BankService bankService;
+	BankRepository bankRepository;
 	BankResponseDto bankResponseDto = new BankResponseDto();
 	Bank bank = new Bank();
 
@@ -33,14 +32,15 @@ public class BankControllerTest {
 		MockitoAnnotations.initMocks(this);
 		bank.setIfscCode("SBI01122");
 		bankResponseDto.setStatusCode(200);
+
 	}
 
 	@Test
 	public void testGetBankAndBranchName() {
-		logger.debug("Inside getBankAndBranchNameTest method");
-		when(bankService.getBankAndBranchName("SBI01122")).thenReturn(bankResponseDto);
-		ResponseEntity<BankResponseDto> result = bankController.getBankAndBranchName("SBI01122");
-		assertEquals(200, result.getBody().getStatusCode());
-	}
+		logger.debug("Inside getBankAndBranchNameTest");
+		when(bankRepository.findByIfscCode("SBI01122")).thenReturn(bank);
+		BankResponseDto bankResponseDto = bankService.getBankAndBranchName("SBI01122");
+		assertEquals(200, bankResponseDto.getStatusCode());
 
+	}
 }

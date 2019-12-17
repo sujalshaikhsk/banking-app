@@ -1,5 +1,6 @@
 package com.strickers.bankingapp.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+
 /**
  * FavoritePayee is the entity class
  * 
@@ -24,16 +26,25 @@ import lombok.Setter;
 @Table(name = "favorite_payees")
 @Getter
 @Setter
-public class FavoritePayee {
+public class FavoritePayee implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer payeeId;
 
+	private Long accountNumber;
+	private String favoriteName;
+	
 	@OneToOne
-	@JoinColumn(name = "account_number")
-	private Account account;
-
+	@JoinColumn(name ="customer_id")
+	private Customer customer;
+	
+	@OneToOne
+	@JoinColumn(name ="ifsc_code")
+	private Bank bank;
+	
 	private String status;
 	private LocalDate createdDate;
 	private LocalDate updatedDate;
