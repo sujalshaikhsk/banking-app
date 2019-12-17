@@ -9,9 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.Valid;
-
-import com.strickers.bankingapp.utils.StringConstant;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +33,8 @@ public class FavoritePayee {
 	@OneToOne
 	@JoinColumn(name = "account_number")
 	private Account account;
-	
+
 	private String status;
 	private LocalDate createdDate;
+	private LocalDate updatedDate;
 }
