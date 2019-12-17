@@ -38,7 +38,7 @@ public class FavotitePayeeServiceImpl implements FavoritePayeeService {
 
 				favoritePayeeDtos.add(favoritePayeeDto);
 			});
-			payeeResponseDto.setFavoritePayeeDtos(favoritePayeeDtos);
+			payeeResponseDto.setFavoritePayees(favoritePayeeDtos);
 			payeeResponseDto.setMessage(ApiConstant.SUCCESS);
 			payeeResponseDto.setStatusCode(200);
 		}else{

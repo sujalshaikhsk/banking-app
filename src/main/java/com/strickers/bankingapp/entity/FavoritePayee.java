@@ -46,4 +46,5 @@ public class FavoritePayee implements Serializable{
 	
 	private String status;
 	private LocalDate createdDate;
+	private LocalDate updatedDate;
 }
