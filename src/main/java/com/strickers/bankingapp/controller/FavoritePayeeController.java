@@ -27,7 +27,7 @@ public class FavoritePayeeController {
 	/**
 	 * @author Sujal
 	 * @description This api is used fetch Payees details based on customer
-	 * @param searchKey is used to search the above mentioned field of profile
+	 * @param customerId is login user id
 	 * @return PayeeResponseDto is the list of Favorite Payees and response code
 	 */
 	@GetMapping("")

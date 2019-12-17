@@ -20,6 +20,12 @@ public class FavotitePayeeServiceImpl implements FavoritePayeeService {
 	@Autowired
 	private FavoritePayeeRepository favoritePayeeRepository;
 
+	/**
+	 * @author Sujal
+	 * @description This method is used fetch Payees details based on customer
+	 * @param customerId is login user id
+	 * @return PayeeResponseDto is the list of Favorite Payees and response code
+	 */
 	@Override
 	public PayeeResponseDto getPayees(Integer customerId) {
 		PayeeResponseDto payeeResponseDto=null;
@@ -49,5 +55,4 @@ public class FavotitePayeeServiceImpl implements FavoritePayeeService {
 
 		return payeeResponseDto;
 	}
-
 }
