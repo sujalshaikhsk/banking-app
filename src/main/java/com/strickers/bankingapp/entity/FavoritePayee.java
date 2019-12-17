@@ -9,9 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.Valid;
-
-import com.strickers.bankingapp.utils.StringConstant;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -32,11 +29,17 @@ public class FavoritePayee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer payeeId;
-
-	@OneToOne
-	@JoinColumn(name = "account_number")
-	private Account account;
-	
+	private Long accountNumber;
+	private String favoriteName;
 	private String status;
 	private LocalDate createdDate;
+	private LocalDate updatedDate;
+	
+	@OneToOne
+	@JoinColumn(name = "ifsc_code")
+	private Bank bank;
+
+	@OneToOne
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
 }
