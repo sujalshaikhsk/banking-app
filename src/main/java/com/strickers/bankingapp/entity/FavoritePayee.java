@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+
 /**
  * FavoritePayee is the entity class
  * 
