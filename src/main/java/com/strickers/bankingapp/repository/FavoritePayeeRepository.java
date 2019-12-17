@@ -18,4 +18,7 @@ public interface FavoritePayeeRepository extends JpaRepository<FavoritePayee, In
 	List<FavoritePayee> getPayeesByCustomerIdAndStatus(@Param("customerId") Integer customerId,
 			@Param("status") String status);
 
+	@Query("select p from FavoritePayee p where p.customer.customerId=:customerId and p.accountNumber=:accountNumber")
+	FavoritePayee findByCustomerIdAndAccountNumber(@Param("customerId")Integer customerId,@Param("accountNumber") Long accountNumber);
+
 }

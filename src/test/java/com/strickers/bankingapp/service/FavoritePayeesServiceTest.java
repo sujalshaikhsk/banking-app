@@ -1,6 +1,7 @@
 package com.strickers.bankingapp.service;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
@@ -19,16 +20,21 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.strickers.bankingapp.dto.FavoritePayeeDto;
+import com.strickers.bankingapp.dto.FavoritePayeeRequestDto;
+import com.strickers.bankingapp.dto.FavoritePayeeResponseDto;
 import com.strickers.bankingapp.dto.PayeeRequestDto;
-import com.strickers.bankingapp.dto.PayeeResponseDto;
 import com.strickers.bankingapp.dto.PayeesResponseDto;
 import com.strickers.bankingapp.entity.Bank;
 import com.strickers.bankingapp.entity.Customer;
 import com.strickers.bankingapp.entity.FavoritePayee;
+import com.strickers.bankingapp.exception.BankNotExistException;
+import com.strickers.bankingapp.exception.CustomerNotExistException;
 import com.strickers.bankingapp.exception.IfscCodeNotFoundException;
+import com.strickers.bankingapp.exception.MaximumFavoriteReachedException;
+import com.strickers.bankingapp.exception.PayeeExistException;
 import com.strickers.bankingapp.repository.BankRepository;
+import com.strickers.bankingapp.repository.CustomerRepository;
 import com.strickers.bankingapp.repository.FavoritePayeeRepository;
-import com.strickers.bankingapp.utils.ApiConstant;
 import com.strickers.bankingapp.utils.StringConstant;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,18 +47,58 @@ public class FavoritePayeesServiceTest {
 	FavoritePayeeRepository favoritePayeeRepository;
 
 	@Mock
+	CustomerRepository customerRepository;
+
+	@Mock
 	BankRepository bankRepository;
 
-	static PayeeRequestDto payeeRequestDto = new PayeeRequestDto();
-	static PayeesResponseDto payeesResponseDto = new PayeesResponseDto();
+	static FavoritePayeeRequestDto favoritePayeeRequestDto = new FavoritePayeeRequestDto();
+	static FavoritePayeeResponseDto favoritePayeeResponseDto = new FavoritePayeeResponseDto();
+	static Customer customer = new Customer();
+	static FavoritePayee favoritePayees = new FavoritePayee();
+	static List<FavoritePayee> favoritePayeeList = new ArrayList<>();
 	static Bank bank = new Bank();
 	static FavoritePayee favoritePayee = new FavoritePayee();
-	static List<FavoritePayee> favoritePayees=new ArrayList<>();
+	static FavoritePayee favoritePayee1 = new FavoritePayee();
+	static PayeeRequestDto payeeRequestDto = new PayeeRequestDto();
+	static PayeesResponseDto payeesResponseDto = new PayeesResponseDto();
+
 	static FavoritePayeeDto favoritePayeeDto= new FavoritePayeeDto();
-	static Customer customer=new Customer();
 	
 	private static final Logger logger = LoggerFactory.getLogger(FavoritePayeeServiceImpl.class);
 
+
+	@Before
+	public void setUp() {
+		customer.setCustomerId(1);
+		favoritePayeeRequestDto.setAccountNumber(2356L);
+		favoritePayeeRequestDto.setFavoriteName("hema");
+		favoritePayeeRequestDto.setIfscCode("ifsc1");
+		favoritePayee.setAccountNumber(2356L);
+		favoritePayee.setPayeeId(1);
+		favoritePayeeList.add(favoritePayee);
+		bank.setIfscCode("ifsc1");
+		favoritePayeeResponseDto.setStatusCode(StringConstant.SUCCESS_STATUS);
+		favoritePayeeResponseDto.setMessage(StringConstant.PAYEE_ADDED);
+		BeanUtils.copyProperties(favoritePayee, favoritePayeeResponseDto);
+		favoritePayee.setStatus(StringConstant.ACTIVE_STATUS);
+		favoritePayee1.setAccountNumber(2356L);
+	}
+
+	@Test
+	public void testAddFavoritePayee() throws MaximumFavoriteReachedException, CustomerNotExistException,
+			BankNotExistException, PayeeExistException {
+		favoritePayees = null;
+		Mockito.when(customerRepository.findByCustomerId(1)).thenReturn(customer);
+		Mockito.when(favoritePayeeRepository.findByCustomerIdAndAccountNumber(1, 2356L)).thenReturn(favoritePayees);
+		Mockito.when(favoritePayeeRepository.getPayeesByCustomerIdAndStatus(1, StringConstant.ACTIVE_STATUS))
+				.thenReturn(favoritePayeeList);
+		Mockito.when(bankRepository.findByIfscCode("ifsc1")).thenReturn(bank);
+		Mockito.when(favoritePayeeRepository.save(favoritePayee)).thenReturn(favoritePayee1);
+		favoritePayeeService.addFavoritePayee(1, favoritePayeeRequestDto);
+		assertEquals(StringConstant.SUCCESS_STATUS, favoritePayeeResponseDto.getStatusCode());
+	}
+	
 	@Before
 	public void setup() {
 		payeeRequestDto.setAccountNumber(12345678L);
@@ -111,24 +157,16 @@ public class FavoritePayeesServiceTest {
 		String payeesResponseDto = favoritePayeeService.updateFavoritePayee(payeeRequestDto).getMessage();
 		assertEquals(StringConstant.IFSC_CODE_EXCEPTION, payeesResponseDto);
 	}
+
+	@Test(expected = CustomerNotExistException.class)
+	public void testAddFavoritePayeeForCustomerNull() throws MaximumFavoriteReachedException, CustomerNotExistException,
+			BankNotExistException, PayeeExistException {
+		customer = null;
+		favoritePayeeResponseDto = null;
+		Mockito.when(customerRepository.findByCustomerId(1)).thenReturn(customer);
+		favoritePayeeService.addFavoritePayee(1, favoritePayeeRequestDto);
+		assertNull(favoritePayeeResponseDto);
+	}
+
 	
-//	@Test
-//	public void getPayeesPositive() {
-//		Integer customerId=1;
-//		PayeeResponseDto payeeResponseDto=null;
-//		List<FavoritePayeeDto> favoritePayeeDtos = new ArrayList<FavoritePayeeDto>();
-//		Mockito.when(favoritePayeeRepository.getPayeesByCustomerIdAndStatus(customerId,
-//				StringConstant.ACTIVE_STATUS)).thenReturn(favoritePayees);
-//		BeanUtils.copyProperties(favoritePayee, favoritePayeeDto);
-//		favoritePayeeDto.setIfscCode(favoritePayee.getBank().getIfscCode());
-//		favoritePayeeDto.setBankName(favoritePayee.getBank().getBankName());
-//		favoritePayeeDto.setBranchName(favoritePayee.getBank().getBranchName());
-//		favoritePayeeDto.setCustomerId(favoritePayee.getCustomer().getCustomerId());
-//		favoritePayeeDtos.add(favoritePayeeDto);
-//		payeeResponseDto.setFavoritePayees(favoritePayeeDtos);
-//		payeeResponseDto.setMessage(ApiConstant.SUCCESS);
-//		payeeResponseDto.setStatusCode(200);
-//		PayeeResponseDto result = favoritePayeeService.getPayees(customerId);
-//		assertNotNull(result);
-//	}
 }

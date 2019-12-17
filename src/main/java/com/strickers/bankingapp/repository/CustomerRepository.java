@@ -3,11 +3,12 @@ package com.strickers.bankingapp.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.strickers.bankingapp.entity.Bank;
+import com.strickers.bankingapp.entity.Customer;
 
 @Repository
-public interface BankRepository extends JpaRepository<Bank, String>{
+public interface CustomerRepository extends JpaRepository<Customer, Integer>{
 
-	Bank findByIfscCode(String ifscCode);
+	Customer findByCustomerId(Integer customerId);
+
 
 }
