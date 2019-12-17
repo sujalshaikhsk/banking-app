@@ -6,7 +6,8 @@ import org.springframework.stereotype.Repository;
 import com.strickers.bankingapp.entity.Bank;
 
 @Repository
-public interface BankRepository extends JpaRepository<Bank, String> {
+public interface BankRepository extends JpaRepository<Bank, Integer> {
+
 	public Bank findByIfscCode(String ifscCode);
 
 }
