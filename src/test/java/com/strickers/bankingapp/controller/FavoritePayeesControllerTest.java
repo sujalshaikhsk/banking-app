@@ -24,7 +24,7 @@ import com.strickers.bankingapp.service.FavoritePayeeService;
 import com.strickers.bankingapp.utils.StringConstant;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class FavoritePayeeControllerTest {
+public class FavoritePayeesControllerTest {
 
 	@InjectMocks
 	FavoritePayeeController favoritePayeeController;
@@ -74,6 +74,7 @@ public class FavoritePayeeControllerTest {
 				.thenReturn(favoritePayeeResponseDto);
 		Integer result = favoritePayeeController.addFavoritePayee(3, favoritePayeeRequestDto).getStatusCodeValue();
 		assertEquals(204, result);
+		
 	}
 
 	@Test
@@ -99,7 +100,6 @@ public class FavoritePayeeControllerTest {
 		Integer result = favoritePayeeController.getPayees(customerId).getStatusCodeValue();
 		assertEquals(200, result);
 	}
-
 	@Test
 	public void getPayeesNegative() {
 		Integer customerId = 1;

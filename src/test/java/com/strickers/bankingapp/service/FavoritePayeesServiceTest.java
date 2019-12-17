@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.strickers.bankingapp.dto.FavoritePayeeDto;
 import com.strickers.bankingapp.dto.FavoritePayeeRequestDto;
 import com.strickers.bankingapp.dto.FavoritePayeeResponseDto;
 import com.strickers.bankingapp.dto.PayeeRequestDto;
@@ -37,7 +38,7 @@ import com.strickers.bankingapp.repository.FavoritePayeeRepository;
 import com.strickers.bankingapp.utils.StringConstant;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class FavoritePayeeServiceTest {
+public class FavoritePayeesServiceTest {
 
 	@InjectMocks
 	FavoritePayeeServiceImpl favoritePayeeService;
@@ -62,6 +63,8 @@ public class FavoritePayeeServiceTest {
 	static PayeeRequestDto payeeRequestDto = new PayeeRequestDto();
 	static PayeesResponseDto payeesResponseDto = new PayeesResponseDto();
 
+	static FavoritePayeeDto favoritePayeeDto= new FavoritePayeeDto();
+	
 	private static final Logger logger = LoggerFactory.getLogger(FavoritePayeeServiceImpl.class);
 
 
@@ -104,7 +107,17 @@ public class FavoritePayeeServiceTest {
 		payeeRequestDto.setPayeeId(1);
 
 		bank.setIfscCode("ABC1234");
+		bank.setBankName("ABC");
+		bank.setBranchName("SSS");
 
+		customer.setCustomerId(1);
+		customer.setDateOfBirth(LocalDate.of(2000, 10, 10));
+		customer.setEmail("abc@gmail.com");
+		customer.setFirstName("abc");
+		customer.setLastName("bbb");
+		customer.setMobileNumber("1234567");
+		customer.setPassword("abbb");
+		
 		favoritePayee.setAccountNumber(12345678L);
 		favoritePayee.setFavoriteName("Divya");
 		favoritePayee.setPayeeId(1);
@@ -155,78 +168,5 @@ public class FavoritePayeeServiceTest {
 		assertNull(favoritePayeeResponseDto);
 	}
 
-	/*
-	 * @Test(expected = PayeeExistException.class) public void
-	 * testAddFavoritePayeeForFavoritePayeesNotNull() throws
-	 * MaximumFavoriteReachedException, CustomerNotExistException,
-	 * BankNotExistException, PayeeExistException {
-	 * favoritePayees.setAccountNumber(2356L);
-	 * favoritePayeeResponseDto.setMessage(StringConstant.PAYEE_ALREADY_EXIST);
-	 * Mockito.when(customerRepository.findByCustomerId(1)).thenReturn(customer);
-	 * Mockito.when(favoritePayeeRepository.findByCustomerIdAndAccountNumber(1,
-	 * 2356L)).thenReturn(favoritePayees);
-	 * favoritePayeeResponseDto=favoritePayeeService.addFavoritePayee(1,
-	 * favoritePayeeRequestDto); assertEquals(StringConstant.PAYEE_ALREADY_EXIST,
-	 * favoritePayeeResponseDto.getMessage()); }
-	 * 
-	 * 
-	 * @Test(expected = MaximumFavoriteReachedException.class) public void
-	 * testAddFavoritePayeeForMaxFavorite() throws MaximumFavoriteReachedException,
-	 * CustomerNotExistException, BankNotExistException, PayeeExistException {
-	 * favoritePayees = null;
-	 * Mockito.when(customerRepository.findByCustomerId(1)).thenReturn(customer);
-	 * Mockito.when(favoritePayeeRepository.findByCustomerIdAndAccountNumber(1,
-	 * 2356L)).thenReturn(favoritePayees);
-	 * Mockito.when(favoritePayeeRepository.getPayeesByCustomerIdAndStatus(1,
-	 * StringConstant.ACTIVE_STATUS)) .thenReturn(favoritePayeeList);
-	 * favoritePayeeService.addFavoritePayee(1, favoritePayeeRequestDto);
-	 * assertNull(favoritePayeeResponseDto); }
-	 * 
-	 * 
-	 * @Test(expected = BankNotExistException.class) public void
-	 * testAddFavoritePayeeForBankNotExist() throws MaximumFavoriteReachedException,
-	 * CustomerNotExistException, BankNotExistException, PayeeExistException {
-	 * favoritePayees = null; bank=null;
-	 * favoritePayeeResponseDto.setMessage(StringConstant.BANK_NOT_EXIST);
-	 * Mockito.when(customerRepository.findByCustomerId(1)).thenReturn(customer);
-	 * Mockito.when(favoritePayeeRepository.findByCustomerIdAndAccountNumber(1,
-	 * 2356L)).thenReturn(favoritePayees);
-	 * Mockito.when(favoritePayeeRepository.getPayeesByCustomerIdAndStatus(1,
-	 * StringConstant.ACTIVE_STATUS)) .thenReturn(favoritePayeeList);
-	 * Mockito.when(bankRepository.findByIfscCode("ifsc7")).thenReturn(bank); String
-	 * messsage=favoritePayeeService.addFavoritePayee(1,
-	 * favoritePayeeRequestDto).getMessage();
-	 * assertEquals(StringConstant.BANK_NOT_EXIST, messsage); }
-	 * 
-	 * @Test public void testAddFavoritePayeeForSuccess() throws
-	 * MaximumFavoriteReachedException, CustomerNotExistException,
-	 * BankNotExistException, PayeeExistException { favoritePayees = null;
-	 * Mockito.when(customerRepository.findByCustomerId(1)).thenReturn(customer);
-	 * Mockito.when(favoritePayeeRepository.findByCustomerIdAndAccountNumber(1,
-	 * 2356L)).thenReturn(favoritePayees);
-	 * Mockito.when(favoritePayeeRepository.getPayeesByCustomerIdAndStatus(1,
-	 * StringConstant.ACTIVE_STATUS)) .thenReturn(favoritePayeeList);
-	 * Mockito.when(bankRepository.findByIfscCode("ifsc1")).thenReturn(bank);
-	 * Mockito.when(favoritePayeeRepository.save(favoritePayee)).thenReturn(
-	 * favoritePayee1); favoritePayeeService.addFavoritePayee(1,
-	 * favoritePayeeRequestDto); assertEquals(StringConstant.SUCCESS_STATUS,
-	 * favoritePayeeResponseDto.getStatusCode()); }
-	 * 
-	 * @Test public void testAddFavoritePayeeForFailure() throws
-	 * MaximumFavoriteReachedException, CustomerNotExistException,
-	 * BankNotExistException, PayeeExistException { favoritePayees = null;
-	 * favoritePayee1 = null;
-	 * favoritePayeeResponseDto.setStatusCode(StringConstant.FAILURE_STATUS);
-	 * Mockito.when(customerRepository.findByCustomerId(1)).thenReturn(customer);
-	 * Mockito.when(favoritePayeeRepository.findByCustomerIdAndAccountNumber(1,
-	 * 2356L)).thenReturn(favoritePayees);
-	 * Mockito.when(favoritePayeeRepository.getPayeesByCustomerIdAndStatus(1,
-	 * StringConstant.ACTIVE_STATUS)) .thenReturn(favoritePayeeList);
-	 * Mockito.when(bankRepository.findByIfscCode("ifsc1")).thenReturn(bank);
-	 * Mockito.when(favoritePayeeRepository.save(favoritePayee)).thenReturn(
-	 * favoritePayee1); favoritePayeeService.addFavoritePayee(1,
-	 * favoritePayeeRequestDto); assertEquals(StringConstant.FAILURE_STATUS,
-	 * favoritePayeeResponseDto.getStatusCode()); }
-	 */
-
+	
 }
