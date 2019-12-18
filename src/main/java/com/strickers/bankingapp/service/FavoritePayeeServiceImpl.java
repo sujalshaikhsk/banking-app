@@ -2,14 +2,20 @@ package com.strickers.bankingapp.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import com.strickers.bankingapp.dto.FavoritePayeeDto;
 import com.strickers.bankingapp.dto.FavoritePayeeRequestDto;
@@ -20,6 +26,7 @@ import com.strickers.bankingapp.dto.PayeesResponseDto;
 import com.strickers.bankingapp.entity.Bank;
 import com.strickers.bankingapp.entity.Customer;
 import com.strickers.bankingapp.entity.FavoritePayee;
+import com.strickers.bankingapp.exception.AccountNumberDoesnotExist;
 import com.strickers.bankingapp.exception.BankNotExistException;
 import com.strickers.bankingapp.exception.CustomerNotExistException;
 import com.strickers.bankingapp.exception.IfscCodeNotFoundException;
@@ -42,6 +49,9 @@ public class FavoritePayeeServiceImpl implements FavoritePayeeService {
 
 	@Autowired
 	BankRepository bankRepository;
+	
+	@Autowired
+	RestTemplate restTemplate;
 
 	private static final Logger logger = LoggerFactory.getLogger(FavoritePayeeServiceImpl.class);
 
@@ -68,6 +78,7 @@ public class FavoritePayeeServiceImpl implements FavoritePayeeService {
 				List<FavoritePayee> favoritePayeeList = favoritePayeeRepository
 						.getPayeesByCustomerIdAndStatus(customerId, StringConstant.ACTIVE_STATUS);
 				if (favoritePayeeList.size() < StringConstant.MAX_FAVORITE_PAYEES) {
+					if(validateAccount(favoritePayeeRequestDto.getAccountNumber())) {
 					Bank bank = bankRepository.findByIfscCode(favoritePayeeRequestDto.getIfscCode());
 					if (bank != null) {
 						FavoritePayee favoritePayee = new FavoritePayee();
@@ -89,6 +100,9 @@ public class FavoritePayeeServiceImpl implements FavoritePayeeService {
 					} else {
 						throw new BankNotExistException(StringConstant.BANK_NOT_EXIST);
 					}
+					}else {
+						throw new AccountNumberDoesnotExist(StringConstant.ACCOUNT_NUMBER_DOESNOT_EXIST);
+					}
 				} else {
 					throw new MaximumFavoriteReachedException(StringConstant.MAX_FAVORITE_REACHED);
 				}
@@ -99,6 +113,18 @@ public class FavoritePayeeServiceImpl implements FavoritePayeeService {
 			throw new CustomerNotExistException(StringConstant.CUSTOMER_NOT_EXIST);
 		}
 		return favoritePayeeResponseDto;
+	}
+
+	private boolean validateAccount(Long accountNumber) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		HttpEntity<String> entity = new HttpEntity<String>(headers);
+		String url = "http://localhost:8080/retailbanking/accounts/" + accountNumber;
+
+		Boolean flag = restTemplate.exchange(url, HttpMethod.GET, entity, Boolean.class).getBody();
+		if(flag!=null && flag==true)
+			return true;
+		return false;
 	}
 
 	/* @author Sri Keerthna. @since 2019-12-17
@@ -140,7 +166,7 @@ public class FavoritePayeeServiceImpl implements FavoritePayeeService {
 	/**
 	 * @author Sujal
 	 * @description This method is used fetch Payees details based on customer
-	 * @param searchKey is used to search the above mentioned field of profile
+	 * @param customerId is login user id
 	 * @return PayeeResponseDto is the list of Favorite Payees and response code
 	 */
 	@Override

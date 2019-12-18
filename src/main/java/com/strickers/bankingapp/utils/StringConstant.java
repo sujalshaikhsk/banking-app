@@ -31,4 +31,5 @@ public class StringConstant {
 	public static final String UPDATED_SUCCESS="Updated Successfully";
 	public static final String IFSC_CODE_EXCEPTION="Invalid IFSC Code";
 	public static final String UPDATE_FAILED="Not Updated";
+	public static final String ACCOUNT_NUMBER_DOESNOT_EXIST = "Account number doesn't exist";
 }
