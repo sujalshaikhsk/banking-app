@@ -47,10 +47,11 @@ public class FavoritePayeesServiceTest {
 	static PayeesResponseDto payeesResponseDto = new PayeesResponseDto();
 	static Bank bank = new Bank();
 	static FavoritePayee favoritePayee = new FavoritePayee();
-	static List<FavoritePayee> favoritePayees=new ArrayList<>();
-	static FavoritePayeeDto favoritePayeeDto= new FavoritePayeeDto();
-	static Customer customer=new Customer();
-	
+	static List<FavoritePayee> favoritePayees = new ArrayList<>();
+	static FavoritePayeeDto favoritePayeeDto = new FavoritePayeeDto();
+	static Customer customer = new Customer();
+	static PayeeResponseDto payeeResponseDto = new PayeeResponseDto();
+
 	private static final Logger logger = LoggerFactory.getLogger(FavoritePayeeServiceImpl.class);
 
 	@Before
@@ -71,13 +72,14 @@ public class FavoritePayeesServiceTest {
 		customer.setLastName("bbb");
 		customer.setMobileNumber("1234567");
 		customer.setPassword("abbb");
-		
+
 		favoritePayee.setAccountNumber(12345678L);
 		favoritePayee.setFavoriteName("Divya");
 		favoritePayee.setPayeeId(1);
+		favoritePayee.setStatus(StringConstant.ACTIVE_STATUS);
 		favoritePayee.setBank(bank);
 		favoritePayee.setUpdatedDate(LocalDate.now());
-
+		favoritePayees.add(favoritePayee);
 	}
 
 	@Test
@@ -111,11 +113,10 @@ public class FavoritePayeesServiceTest {
 		String payeesResponseDto = favoritePayeeService.updateFavoritePayee(payeeRequestDto).getMessage();
 		assertEquals(StringConstant.IFSC_CODE_EXCEPTION, payeesResponseDto);
 	}
-	
+
 //	@Test
 //	public void getPayeesPositive() {
 //		Integer customerId=1;
-//		PayeeResponseDto payeeResponseDto=null;
 //		List<FavoritePayeeDto> favoritePayeeDtos = new ArrayList<FavoritePayeeDto>();
 //		Mockito.when(favoritePayeeRepository.getPayeesByCustomerIdAndStatus(customerId,
 //				StringConstant.ACTIVE_STATUS)).thenReturn(favoritePayees);
@@ -131,4 +132,18 @@ public class FavoritePayeesServiceTest {
 //		PayeeResponseDto result = favoritePayeeService.getPayees(customerId);
 //		assertNotNull(result);
 //	}
+
+	@Test
+	public void getPayeesNegative() {
+		Integer customerId = 1;
+		List<FavoritePayeeDto> favoritePayeeDtos = new ArrayList<FavoritePayeeDto>();
+		Mockito.when(favoritePayeeRepository.getPayeesByCustomerIdAndStatus(customerId, StringConstant.ACTIVE_STATUS))
+				.thenReturn(null);
+		payeeResponseDto = new PayeeResponseDto();
+		payeeResponseDto.setMessage(ApiConstant.FAILED);
+		payeeResponseDto.setStatusCode(204);
+		PayeeResponseDto result = favoritePayeeService.getPayees(customerId);
+		assertNotNull(result);
+	}
+
 }
