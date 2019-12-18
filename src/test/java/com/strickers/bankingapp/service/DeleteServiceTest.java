@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.strickers.bankingapp.dto.ResponseDto;
 import com.strickers.bankingapp.entity.Customer;
 import com.strickers.bankingapp.entity.FavoritePayee;
-import com.strickers.bankingapp.repository.FavoritePayeeRespository;
+import com.strickers.bankingapp.repository.FavoritePayeeRepository;
 import com.strickers.bankingapp.utils.StringConstant;
 
 /**
@@ -29,12 +29,14 @@ import com.strickers.bankingapp.utils.StringConstant;
  */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class DeleteServiceTest {
+	
 	private static final Logger logger = LoggerFactory.getLogger(BankServiceImplTest.class);
+	
 	@InjectMocks
 	DeleteServiceImpl deleteService;
 
 	@Mock
-	FavoritePayeeRespository favoritePayeeRespository;
+	FavoritePayeeRepository favoritePayeeRespository;
 
 	ResponseDto responseDto = new ResponseDto();
 	FavoritePayee favoritePayee = new FavoritePayee();

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.strickers.bankingapp.dto.ResponseDto;
 import com.strickers.bankingapp.entity.FavoritePayee;
-import com.strickers.bankingapp.repository.FavoritePayeeRespository;
+import com.strickers.bankingapp.repository.FavoritePayeeRepository;
 import com.strickers.bankingapp.utils.StringConstant;
 
 /**
@@ -21,8 +21,7 @@ import com.strickers.bankingapp.utils.StringConstant;
 public class DeleteServiceImpl implements DeleteService {
 	private static final Logger logger = LoggerFactory.getLogger(BankServiceImpl.class);
 	@Autowired
-	FavoritePayeeRespository favoritePayeeRespository;
-
+	FavoritePayeeRepository favoritePayeeRepository;
 	/**
 	 * @description ->this class is used to change the status of the particular
 	 *              payeeId when we are doing delete operation.
@@ -33,11 +32,11 @@ public class DeleteServiceImpl implements DeleteService {
 	public ResponseDto deleteAccount(Integer customerId, Integer payeeId) {
 		ResponseDto responseDto = null;
 		logger.info("Inside deleteAccount method");
-		FavoritePayee favoritePayee = favoritePayeeRespository.findByPayeeIdAndCustomerId(customerId, payeeId);
+		FavoritePayee favoritePayee = favoritePayeeRepository.findByPayeeIdAndCustomerId(customerId, payeeId);
 		if (favoritePayee != null) {
 			responseDto = new ResponseDto();
 			favoritePayee.setStatus(StringConstant.DEACTIVE_STATUS);
-			FavoritePayee favoritePayee2 = favoritePayeeRespository.save(favoritePayee);
+			FavoritePayee favoritePayee2 = favoritePayeeRepository.save(favoritePayee);
 			if (favoritePayee2 != null) {
 				responseDto.setMessage(StringConstant.SUCCESS);
 				responseDto.setStatusCode(StringConstant.SUCCESS_STATUS_CODE);
