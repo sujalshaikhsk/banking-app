@@ -127,7 +127,8 @@ public class FavoritePayeeServiceImpl implements FavoritePayeeService {
 		return false;
 	}
 
-	/* @author Sri Keerthna. @since 2019-12-17
+	/**
+	 * @author Sri Keerthna. @since 2019-12-17
 	 * @description Input is given through PayeeResponseDto which is updated in
 	 *              database if the payeeId is present and give us a success message
 	 * @param payeeRequestDto
@@ -157,7 +158,7 @@ public class FavoritePayeeServiceImpl implements FavoritePayeeService {
 			}
 		} else {
 			payeeResponseDto.setMessage(StringConstant.UPDATE_FAILED);
-			payeeResponseDto.setStatusCode(StringConstant.FAILURE_STATUS);
+			payeeResponseDto.setStatusCode(StringConstant.UPDATE_FAILURE_STATUS);
 			return payeeResponseDto;
 		}
 
@@ -171,14 +172,14 @@ public class FavoritePayeeServiceImpl implements FavoritePayeeService {
 	 */
 	@Override
 	public PayeeResponseDto getPayees(Integer customerId) {
-		PayeeResponseDto payeeResponseDto=null;
-		List<FavoritePayeeDto> favoritePayeeDtos = new ArrayList<FavoritePayeeDto>();
+		PayeeResponseDto payeeResponseDto = null;
+		List<FavoritePayeeDto> favoritePayeeDtos = new ArrayList<>();
 		List<FavoritePayee> favoritePayees = favoritePayeeRepository.getPayeesByCustomerIdAndStatus(customerId,
 				StringConstant.ACTIVE_STATUS);
-		if(favoritePayees!=null && !favoritePayees.isEmpty()) {
-			payeeResponseDto=new PayeeResponseDto();
+		if (favoritePayees != null && !favoritePayees.isEmpty()) {
+			payeeResponseDto = new PayeeResponseDto();
 			favoritePayees.forEach(favoritePayee -> {
-				FavoritePayeeDto favoritePayeeDto= new FavoritePayeeDto();
+				FavoritePayeeDto favoritePayeeDto = new FavoritePayeeDto();
 				BeanUtils.copyProperties(favoritePayee, favoritePayeeDto);
 				favoritePayeeDto.setIfscCode(favoritePayee.getBank().getIfscCode());
 				favoritePayeeDto.setBankName(favoritePayee.getBank().getBankName());
@@ -190,8 +191,8 @@ public class FavoritePayeeServiceImpl implements FavoritePayeeService {
 			payeeResponseDto.setFavoritePayees(favoritePayeeDtos);
 			payeeResponseDto.setMessage(ApiConstant.SUCCESS);
 			payeeResponseDto.setStatusCode(200);
-		}else{
-			payeeResponseDto=new PayeeResponseDto();
+		} else {
+			payeeResponseDto = new PayeeResponseDto();
 			payeeResponseDto.setMessage(ApiConstant.FAILED);
 			payeeResponseDto.setStatusCode(204);
 		}

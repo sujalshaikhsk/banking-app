@@ -1,6 +1,7 @@
 package com.strickers.bankingapp.service;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -27,7 +28,9 @@ import com.strickers.bankingapp.utils.StringConstant;
  */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class DeleteServiceTest {
+
 	private static final Logger logger = LoggerFactory.getLogger(BankServiceImplTest.class);
+
 	@InjectMocks
 	DeleteServiceImpl deleteService;
 
@@ -36,6 +39,7 @@ public class DeleteServiceTest {
 
 	ResponseDto responseDto = new ResponseDto();
 	FavoritePayee favoritePayee = new FavoritePayee();
+	FavoritePayee favoritePayees = new FavoritePayee();
 	Customer customer = new Customer();
 
 	@Before
@@ -44,6 +48,9 @@ public class DeleteServiceTest {
 		responseDto.setStatusCode(StringConstant.SUCCESS_STATUS_CODE);
 		favoritePayee.setPayeeId(1);
 		customer.setCustomerId(1);
+		responseDto.setStatusCode(StringConstant.SUCCESS_STATUS_CODE);
+		responseDto.setStatusCode(StringConstant.FAILURE_STATUS_CODE);
+		favoritePayees.setPayeeId(2);
 	}
 
 	@Test
@@ -52,6 +59,14 @@ public class DeleteServiceTest {
 		when(favoritePayeeRespository.findByPayeeIdAndCustomerId(1, 1)).thenReturn(favoritePayee);
 		ResponseDto responseDto = deleteService.deleteAccount(1, 1);
 		assertNotNull(responseDto);
+	}
+
+	@Test
+	public void testDeleteAccountNegative() {
+		logger.debug("Inside deleteAccountNegativeTest");
+		when(favoritePayeeRespository.findByPayeeIdAndCustomerId(1, 1)).thenReturn(null);
+		ResponseDto responseDto = deleteService.deleteAccount(1, 1);
+		assertEquals(204, responseDto.getStatusCode());
 	}
 
 }
