@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApiExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-app</a> &gt; <a href="index.source.html" class="el_package">com.strickers.bankingapp.exception</a> &gt; <span class="el_source">ApiExceptionHandler.java</span></div><h1>ApiExceptionHandler.java</h1><pre class="source lang-java linenums">package com.strickers.bankingapp.exception;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import com.strickers.bankingapp.dto.ExceptionResponseDto;
+import com.strickers.bankingapp.utils.ApiConstant;
+
+/**
+ * 
+ * @author Sujal
+ * @description Global Exception handler class
+ *
+ */
+@ControllerAdvice
+<span class="nc" id="L24">public class ApiExceptionHandler {</span>
+
+<span class="nc" id="L26">	Logger logger = LoggerFactory.getLogger(ApiExceptionHandler.class);</span>
+
+	/**
+	 * @description Handle NullPointer Exception
+	 *
+	 * @param exception
+	 * @return
+	 */
+	@ExceptionHandler(NullPointerException.class)
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public final ExceptionResponseDto handleNullPointerExceptions(NullPointerException exception) {
+<span class="nc" id="L38">		String defaultMessage = exception.getMessage();</span>
+<span class="nc" id="L39">		return new ExceptionResponseDto(ApiConstant.NO_ELEMENT_FOUND, defaultMessage);</span>
+	}
+
+	/**
+	 * @description Handle MethodArgumentNotValidException
+	 *
+	 * @param exception
+	 * @return
+	 */
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ExceptionResponseDto handleValidationError(MethodArgumentNotValidException exception) {
+<span class="nc" id="L52">		BindingResult bindingResult = exception.getBindingResult();</span>
+<span class="nc" id="L53">		FieldError fieldError = bindingResult.getFieldError();</span>
+<span class="nc" id="L54">		String defaultMessage = fieldError.getDefaultMessage();</span>
+<span class="nc" id="L55">		return new ExceptionResponseDto(ApiConstant.VALIDATION_FAILED, defaultMessage);</span>
+	}
+
+	/**
+	 * @description Handle Runtime Exception
+	 *
+	 * @param ex
+	 * @return
+	 */
+	@ExceptionHandler(RuntimeException.class)
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public final ExceptionResponseDto handleAllRuntimeExceptions(RuntimeException exception) {
+<span class="nc" id="L68">		String defaultMessage = exception.getMessage();</span>
+<span class="nc" id="L69">		return new ExceptionResponseDto(ApiConstant.INTERNAL_SERVER_ERROR, defaultMessage);</span>
+	}
+
+	/**
+	 * @description All Handle Exception
+	 *
+	 * @param ex
+	 * @return
+	 */
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public final ExceptionResponseDto handleAllExceptions(Exception exception) {
+<span class="nc" id="L82">		String defaultMessage = exception.getMessage();</span>
+<span class="nc" id="L83">		return new ExceptionResponseDto(ApiConstant.INTERNAL_SERVER_ERROR, defaultMessage);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FavoritePayeeServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-app</a> &gt; <a href="index.source.html" class="el_package">com.strickers.bankingapp.service</a> &gt; <span class="el_source">FavoritePayeeServiceImpl.java</span></div><h1>FavoritePayeeServiceImpl.java</h1><pre class="source lang-java linenums">package com.strickers.bankingapp.service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.strickers.bankingapp.dto.FavoritePayeeDto;
+import com.strickers.bankingapp.dto.PayeeRequestDto;
+import com.strickers.bankingapp.dto.PayeeResponseDto;
+import com.strickers.bankingapp.dto.PayeesResponseDto;
+import com.strickers.bankingapp.entity.Bank;
+import com.strickers.bankingapp.entity.FavoritePayee;
+import com.strickers.bankingapp.exception.IfscCodeNotFoundException;
+import com.strickers.bankingapp.repository.BankRepository;
+import com.strickers.bankingapp.repository.FavoritePayeeRepository;
+import com.strickers.bankingapp.utils.ApiConstant;
+import com.strickers.bankingapp.utils.StringConstant;
+
+@Service
+<span class="fc" id="L26">public class FavoritePayeeServiceImpl implements FavoritePayeeService {</span>
+
+	@Autowired
+	FavoritePayeeRepository favoritePayeeRepository;
+
+	@Autowired
+	BankRepository bankRepository;
+
+<span class="fc" id="L34">	private static final Logger logger = LoggerFactory.getLogger(FavoritePayeeServiceImpl.class);</span>
+
+	/**
+	 * @author Sri Keerthna. @since 2019-12-17
+	 * @description Input is given through PayeeResponseDto which is updated in
+	 *              database if the payeeId is present and give us a success message
+	 * @param payeeRequestDto
+	 * @return PayeeResponseDto with favoriteName,status and message
+	 * @throws IfscCodeNotFoundException
+	 */
+	@Override
+	public PayeesResponseDto updateFavoritePayee(PayeeRequestDto payeeRequestDto) throws IfscCodeNotFoundException {
+<span class="fc" id="L46">		PayeesResponseDto payeeResponseDto = new PayeesResponseDto();</span>
+<span class="fc" id="L47">		FavoritePayee favoritePayee = favoritePayeeRepository.findByPayeeId(payeeRequestDto.getPayeeId());</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">		if (favoritePayee != null) {</span>
+<span class="fc" id="L49">			logger.info(&quot;Got the payee Id and its details&quot;);</span>
+<span class="fc" id="L50">			String favoriteName = payeeRequestDto.getFavoriteName();</span>
+<span class="fc" id="L51">			Bank bank = bankRepository.findByIfscCode(payeeRequestDto.getIfscCode());</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">			if (bank != null) {</span>
+<span class="fc" id="L53">				logger.info(&quot;Got the bank details for that IFSC code&quot;);</span>
+<span class="fc" id="L54">				BeanUtils.copyProperties(payeeRequestDto, favoritePayee);</span>
+<span class="fc" id="L55">				favoritePayee.setBank(bank);</span>
+<span class="fc" id="L56">				favoritePayee.setUpdatedDate(LocalDate.now());</span>
+<span class="fc" id="L57">				favoritePayeeRepository.save(favoritePayee);</span>
+<span class="fc" id="L58">				payeeResponseDto.setFavoriteName(favoriteName);</span>
+<span class="fc" id="L59">				payeeResponseDto.setMessage(StringConstant.UPDATED_SUCCESS);</span>
+<span class="fc" id="L60">				payeeResponseDto.setStatusCode(StringConstant.SUCCESS_STATUS);</span>
+<span class="fc" id="L61">				return payeeResponseDto;</span>
+			} else {
+<span class="fc" id="L63">				throw new IfscCodeNotFoundException(StringConstant.IFSC_CODE_EXCEPTION);</span>
+			}
+		} else {
+<span class="fc" id="L66">			payeeResponseDto.setMessage(StringConstant.UPDATE_FAILED);</span>
+<span class="fc" id="L67">			payeeResponseDto.setStatusCode(StringConstant.FAILURE_STATUS);</span>
+<span class="fc" id="L68">			return payeeResponseDto;</span>
+		}
+
+	}
+	
+	@Override
+	public PayeeResponseDto getPayees(Integer customerId) {
+<span class="nc" id="L75">		PayeeResponseDto payeeResponseDto=null;</span>
+<span class="nc" id="L76">		List&lt;FavoritePayeeDto&gt; favoritePayeeDtos = new ArrayList&lt;FavoritePayeeDto&gt;();</span>
+<span class="nc" id="L77">		List&lt;FavoritePayee&gt; favoritePayees = favoritePayeeRepository.getPayeesByCustomerIdAndStatus(customerId,</span>
+				StringConstant.ACTIVE_STATUS);
+<span class="nc bnc" id="L79" title="All 4 branches missed.">		if(favoritePayees!=null &amp;&amp; !favoritePayees.isEmpty()) {</span>
+<span class="nc" id="L80">			payeeResponseDto=new PayeeResponseDto();</span>
+<span class="nc" id="L81">			favoritePayees.forEach(favoritePayee -&gt; {</span>
+<span class="nc" id="L82">				FavoritePayeeDto favoritePayeeDto= new FavoritePayeeDto();</span>
+<span class="nc" id="L83">				BeanUtils.copyProperties(favoritePayee, favoritePayeeDto);</span>
+<span class="nc" id="L84">				favoritePayeeDto.setIfscCode(favoritePayee.getBank().getIfscCode());</span>
+<span class="nc" id="L85">				favoritePayeeDto.setBankName(favoritePayee.getBank().getBankName());</span>
+<span class="nc" id="L86">				favoritePayeeDto.setBranchName(favoritePayee.getBank().getBranchName());</span>
+<span class="nc" id="L87">				favoritePayeeDto.setCustomerId(favoritePayee.getCustomer().getCustomerId());</span>
+
+<span class="nc" id="L89">				favoritePayeeDtos.add(favoritePayeeDto);</span>
+<span class="nc" id="L90">			});</span>
+<span class="nc" id="L91">			payeeResponseDto.setFavoritePayees(favoritePayeeDtos);</span>
+<span class="nc" id="L92">			payeeResponseDto.setMessage(ApiConstant.SUCCESS);</span>
+<span class="nc" id="L93">			payeeResponseDto.setStatusCode(200);</span>
+		}else{
+<span class="nc" id="L95">			payeeResponseDto=new PayeeResponseDto();</span>
+<span class="nc" id="L96">			payeeResponseDto.setMessage(ApiConstant.FAILED);</span>
+<span class="nc" id="L97">			payeeResponseDto.setStatusCode(204);</span>
+		}
+
+<span class="nc" id="L100">		return payeeResponseDto;</span>
+	}
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

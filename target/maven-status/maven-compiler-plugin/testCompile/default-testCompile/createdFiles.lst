@@ -1,0 +1,6 @@
+com\strickers\bankingapp\controller\FavoritePayeesControllerTest.class
+com\strickers\bankingapp\controller\DeleteControllerTest.class
+com\strickers\bankingapp\service\FavoritePayeesServiceTest.class
+com\strickers\bankingapp\service\DeleteServiceTest.class
+com\strickers\bankingapp\controller\BankControllerTest.class
+com\strickers\bankingapp\service\BankServiceImplTest.class
