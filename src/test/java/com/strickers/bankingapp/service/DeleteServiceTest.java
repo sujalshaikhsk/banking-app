@@ -1,5 +1,6 @@
-package com.strickers.bankingapp.controller;
+package com.strickers.bankingapp.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -9,30 +10,31 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.strickers.bankingapp.dto.ResponseDto;
 import com.strickers.bankingapp.entity.Customer;
 import com.strickers.bankingapp.entity.FavoritePayee;
-import com.strickers.bankingapp.service.DeleteService;
+import com.strickers.bankingapp.repository.FavoritePayeeRespository;
+import com.strickers.bankingapp.utils.StringConstant;
 
 /**
  * @author Vasavi
  * @since 2019-12-17
  * @description -> this class is used to do test operation for changing the
- *              status while deleting the record.
- *
+ *              status while doing delete operation.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-public class DeleteControllerTest {
-	private static final Logger logger = LoggerFactory.getLogger(BankControllerTest.class);
+@RunWith(MockitoJUnitRunner.Silent.class)
+public class DeleteServiceTest {
+	private static final Logger logger = LoggerFactory.getLogger(BankServiceImplTest.class);
 	@InjectMocks
-	DeleteController deleteController;
+	DeleteServiceImpl deleteService;
+
 	@Mock
-	DeleteService deleteService;
+	FavoritePayeeRespository favoritePayeeRespository;
+
 	ResponseDto responseDto = new ResponseDto();
 	FavoritePayee favoritePayee = new FavoritePayee();
 	Customer customer = new Customer();
@@ -40,17 +42,17 @@ public class DeleteControllerTest {
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
-		responseDto.setStatusCode(200);
+		responseDto.setStatusCode(StringConstant.SUCCESS_STATUS_CODE);
 		favoritePayee.setPayeeId(1);
 		customer.setCustomerId(1);
 	}
 
 	@Test
 	public void testDeleteAccount() {
-		logger.debug("Inside deleteControllerTest");
-		when(deleteService.deleteAccount(1, 1)).thenReturn(responseDto);
-		ResponseEntity<ResponseDto> result = deleteController.deleteAccount(1, 1);
-		assertEquals(200, result.getBody().getStatusCode());
+		logger.debug("Inside deleteAccountTest");
+		when(favoritePayeeRespository.findByPayeeIdAndCustomerId(1, 1)).thenReturn(favoritePayee);
+		ResponseDto responseDto = deleteService.deleteAccount(1, 1);
+		assertThat(responseDto);
 	}
 
 }

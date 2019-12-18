@@ -25,18 +25,21 @@ public class FavoritePayee implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer payeeId;
+
 	private Long accountNumber;
-	private String favoriteName;
-	private String status;
-	private LocalDate createdDate;
-	private LocalDate updatedDate;
+	
+	@OneToOne
+	@JoinColumn(name ="customer_id")
+	private Customer customer;
 	
 	@OneToOne
 	@JoinColumn(name = "ifsc_code")
 	private Bank bank;
+	
+	private String status;
+	private LocalDate createdDate;
+	private LocalDate updatedDate;
+	private String favoriteName;
 
-	@OneToOne
-	@JoinColumn(name = "customer_id")
-	private Customer customer;
 
 }
