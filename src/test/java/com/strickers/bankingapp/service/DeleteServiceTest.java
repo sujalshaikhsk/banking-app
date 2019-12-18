@@ -1,6 +1,5 @@
 package com.strickers.bankingapp.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
@@ -17,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.strickers.bankingapp.dto.ResponseDto;
 import com.strickers.bankingapp.entity.Customer;
 import com.strickers.bankingapp.entity.FavoritePayee;
-import com.strickers.bankingapp.repository.FavoritePayeeRespository;
+import com.strickers.bankingapp.repository.FavoritePayeeRepository;
 import com.strickers.bankingapp.utils.StringConstant;
 
 /**
@@ -33,7 +32,7 @@ public class DeleteServiceTest {
 	DeleteServiceImpl deleteService;
 
 	@Mock
-	FavoritePayeeRespository favoritePayeeRespository;
+	FavoritePayeeRepository favoritePayeeRespository;
 
 	ResponseDto responseDto = new ResponseDto();
 	FavoritePayee favoritePayee = new FavoritePayee();
